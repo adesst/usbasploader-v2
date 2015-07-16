@@ -140,15 +140,19 @@ these macros are defined, the boot loader usees them.
 
 static inline void  bootLoaderInit(void)
 {
+    DDRC |= (1 << 4);
+    PORTC |= (1 << 4 );
+
     PORTD |= (1 << JUMPER_BIT);     /* activate pull-up */
-    if(!(MCUCSR & (1 << EXTRF)))    /* If this was not an external reset, ignore */
-        leaveBootloader();
+    //if(!(MCUCSR & (1 << EXTRF)))    /* If this was not an external reset, ignore */
+    //    leaveBootloader();
     MCUCSR = 0;                     /* clear all reset flags for next time */
 }
 
 static inline void  bootLoaderExit(void)
 {
     PORTD = 0;                      /* undo bootLoaderInit() changes */
+    PORTC = 0;
 }
 
 #define bootLoaderCondition()   ((PIND & (1 << JUMPER_BIT)) == 0)
